@@ -98,6 +98,12 @@ $(function () {
           });
         }
 
+        if (data.append) {
+          $.each(data.append, function (key, value) {
+            $(key).append(value);
+          });
+        }
+
         if (data.reset) {
           $.each(data.reset, function (key, value) {
             $(key)[0].reset();
@@ -198,10 +204,12 @@ $(function () {
     Ajax(AjaxFile, AjaxData);
   });
 
-  $(".j_open_modal").click(function() {
-    let folder = $(this).attr("name");
+  $(".j_open_modal").click(function(e) {
+    e.preventDefault();
+
+    let folder = $(this).attr("path");
     $('#UploadForm')[0].reset();
-    $('#UploadForm').find("input[name='folder']").val(folder);
+    $('#UploadForm').find("input[name='path']").val(folder);
     $('#Modal').fadeIn();
   });
 })

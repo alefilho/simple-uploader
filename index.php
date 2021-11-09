@@ -7,6 +7,10 @@ if (empty($_GET['user']) || empty($_GET['password']) || $_GET['user'] != USER ||
   http_response_code(401);
   die("Access denied");
 }
+
+define("BASE_LINK", BASE . "/?user={$_GET['user']}&password={$_GET['password']}");
+
+$path = (!empty($_GET['path']) ? $_GET['path'] : "/");
 ?>
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
@@ -25,18 +29,48 @@ if (empty($_GET['user']) || empty($_GET['password']) || $_GET['user'] != USER ||
     <script src="src/js/scripts.js"></script>
   </head>
   <body>
+    <header>
+      <?php
+      if ($path != "/") {
+        $path_back = explode("/", $path);
+        unset($path_back[count($path_back) - 1]);
+        $path_back = implode("/", $path_back);
+        ?>
+        <a class="back" href="<?= BASE_LINK; ?>&path=<?= $path_back; ?>"><i class="fas fa-arrow-left"></i></a>
+        <?php
+      };
+      ?>
+
+      <a href="#" class="j_open_modal" path="<?= $path; ?>"><i class="fas fa-cloud-upload-alt"></i></a>
+      <h1><?= $path; ?></h1>
+    </header>
+
     <ul>
       <?php
-      $folders = scandir(__DIR__);
+      $folders = scandir(__DIR__ . $path);
 
       if (!empty($folders)) {
         $ignore = [".", "..", ".git", "index.php", "src"];
+
         foreach ($folders as $key => $value) {
           if (!in_array($value, $ignore)) {
-            if (is_dir($value)) {
-              echo '<li class="j_open_modal" name="'.$value.'">
-                <i class="far fa-folder-open"></i>
-                <p>'.$value.'</p>
+            if (is_dir(__DIR__ . $path . "/" . $value)) {
+              if ($path != "/") {
+                $path = $path . "/";
+              }
+
+              echo '<li>
+                <a href="'.BASE_LINK.'&path='.$path.$value.'">
+                  <i class="far fa-folder-open"></i>
+                  <p>'.$value.'</p>
+                </a>
+              </li>';
+            }else {
+              echo '<li>
+                <a href="'.BASE.$path.$value.'" target="_blank">
+                  <i class="far fa-file"></i>
+                  <p>'.$value.'</p>
+                </a>
               </li>';
             }
           }
@@ -55,7 +89,7 @@ if (empty($_GET['user']) || empty($_GET['password']) || $_GET['user'] != USER ||
           <form id="UploadForm" class="form j_form" action="" method="post">
             <input type="hidden" name="AjaxFile" value="Upload">
             <input type="hidden" name="AjaxAction" value="up">
-            <input type="hidden" name="folder" value="">
+            <input type="hidden" name="path" value="">
 
             <label>
               <span class="legend">*Imagem</span>

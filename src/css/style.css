@@ -197,18 +197,20 @@ ul {
   flex-wrap: wrap;
 }
 
-li {
-  text-align: center;
+li a {
   background-color: #fbfbfb;
   transition: all .3s;
-  padding: 20px;
-  cursor: pointer;
   border-radius: 5px;
   margin: 3px;
-
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  display: block;
+  color: #000;
+  text-decoration: none;
 }
 
-li:hover {
+li a:hover {
   background-color: #171a21;
   color: #fff;
 }
@@ -221,4 +223,27 @@ li p {
 
 i {
   font-size: 1.1em;
+}
+
+header {
+  display: flex;
+  padding-bottom: 25px;
+  align-items: center;
+}
+
+header a {
+  background-color: #171a21;
+  transition: all .3s;
+  border-radius: 5px;
+  margin: 3px;
+  text-align: center;
+  padding: 20px;
+  cursor: pointer;
+  display: block;
+  color: #FFF;
+  text-decoration: none;
+}
+
+header h1 {
+  margin-left: 25px;
 }

@@ -19,7 +19,7 @@ if ($PostData && $PostData['AjaxFile'] == $File):
   //SELECIONA AÇÃO
   switch ($Case):
     case 'up':
-      if (!empty($PostData['folder'])) {
+      if (!empty($PostData['path'])) {
         $attachment = ( isset($_FILES['attachment']['tmp_name']) ? $_FILES['attachment'] : null );
 
         if (!empty($attachment['tmp_name'])) {
@@ -31,11 +31,25 @@ if ($PostData && $PostData['AjaxFile'] == $File):
             case 'image/x-png':
               $fileName = time() . str_pad(rand(0, 999), 3, "0", STR_PAD_LEFT) . '.' . pathinfo($attachment['name'], PATHINFO_EXTENSION);
 
-              if (move_uploaded_file($attachment['tmp_name'], "../../{$PostData['folder']}/{$fileName}")) {
+              if ($PostData['path'] != "/") {
+                $PostData['path'] = $PostData['path'] . "/";
+              }
+
+              $PostData['path'] = explode("/", $PostData['path']);
+              unset($PostData['path'][0]);
+              $PostData['path'] = implode("/", $PostData['path']);
+
+              if (move_uploaded_file($attachment['tmp_name'], __DIR__ . "/../../{$PostData['path']}{$fileName}")) {
                 $jSON['trigger'] = ToastError("Sucesso no upload");
                 $jSON['reset']['#UploadForm'] = true;
-                $jSON['open'] = ["{$PostData['folder']}/{$fileName}" => "_blank"];
+                $jSON['open'] = ["{$PostData['path']}{$fileName}" => "_blank"];
                 $jSON['fadeOut']['#Modal'] = true;
+                $jSON['append']['ul'] = '<li>
+                  <a href="'.$PostData['path'].$fileName.'" target="_blank">
+                    <i class="far fa-file"></i>
+                    <p>'.$fileName.'</p>
+                  </a>
+                </li>';
               } else {
                 $jSON['trigger'] = ToastError("Erro ao fazer upload", E_USER_WARNING);
               }
