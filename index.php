@@ -67,7 +67,7 @@ $path = (!empty($_GET['path']) ? $_GET['path'] : "/");
               </li>';
             }else {
               echo '<li>
-                <a href="'.BASE.$path.$value.'" target="_blank">
+                <a href="'.BASE.$path."/".$value.'" target="_blank">
                   <i class="far fa-file"></i>
                   <p>'.$value.'</p>
                 </a>
