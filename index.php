@@ -1,5 +1,12 @@
 <?php
-define("BASE", "http://localhost/blue/simple-uploader");
+if (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on' || isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https') {
+  $url = "http://" . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+  header('Location: ' . $url, true, 301);
+  exit();
+}
+
+// define("BASE", "http://localhost/blue/simple-uploader");
+define("BASE", "http://storage.newbp.xyz");
 define("USER", "admin");
 define("PASS", "123");
 
@@ -50,7 +57,7 @@ $path = (!empty($_GET['path']) ? $_GET['path'] : "/");
       $folders = scandir(__DIR__ . $path);
 
       if (!empty($folders)) {
-        $ignore = [".", "..", ".git", "index.php", "src"];
+        $ignore = [".", "..", ".git", "index.php", "src", "movie-add-information"];
 
         foreach ($folders as $key => $value) {
           if (!in_array($value, $ignore)) {
